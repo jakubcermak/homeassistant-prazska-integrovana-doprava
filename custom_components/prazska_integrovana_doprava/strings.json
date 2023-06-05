@@ -1,0 +1,15 @@
+{
+    "title": "Pražská integrovaná doprava",
+	"config": {
+		"step": {
+			"user": {
+				"title": "Pražská integrovaná doprava",
+				"description": "Integration with Prague Transport to see next buses from selected station. See readme to learn how to get API key.",
+				"data": {
+					"api_key": "API key",
+					"scan_interval": "Update interval in minutes"
+				}
+			}
+        }
+    }
+}

@@ -1,0 +1,15 @@
+{
+    "title": "Pražská integrovaná doprava",
+	"config": {
+		"step": {
+			"user": {
+				"title": "Pražská integrovaná doprava",
+				"description": "Integrace s PID. Pro info o získání API klíče, přečti si readme soubor.",
+				"data": {
+					"api_key": "API klíč",
+					"scan_interval": "Aktualizační interval (minuty)"
+				}
+			}
+        }
+    }
+}
