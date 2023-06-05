@@ -22,7 +22,7 @@ class PidConnection:
 
 
 class PidConnector:
-    apiurl = "https://api.golemio.cz/v2/pid/departureboards?ids=U2223Z2&ids=U2223Z1&ids=U2259Z1&ids=U2259Z2"
+    apiurl = "https://api.golemio.cz/v2/pid/departureboards?ids=U2223Z2&ids=U2223Z1&ids=U2259Z1&ids=U2259Z2&minutesAfter=600&limit=5"
     __cache: list[PidConnection]
     __cache_date: datetime
 

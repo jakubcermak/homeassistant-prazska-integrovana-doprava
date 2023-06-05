@@ -72,3 +72,18 @@ class TimeTableSensor(SensorEntity):
     @property
     def native_value(self) -> datetime:
         return self._data[self._n].scheduled if self.available else None
+
+    @property
+    def extra_state_attributes(self) -> dict[str, str]:
+        return (
+            {
+                "stop_from": self._data[self._n].stop_from,
+                "stop_to": self._data[self._n].stop_to,
+                "scheduled": self._data[self._n].scheduled,
+                "predicted": self._data[self._n].predicted,
+                "delay_available": self._data[self._n].delay_available,
+                "linenumber": self._data[self._n].linenumber,
+            }
+            if self.available
+            else {}
+        )
