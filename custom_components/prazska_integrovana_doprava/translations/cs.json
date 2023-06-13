@@ -1,5 +1,5 @@
 {
-    "title": "Pražská integrovaná doprava",
+	"title": "Pražská integrovaná doprava",
 	"config": {
 		"step": {
 			"user": {
@@ -10,6 +10,38 @@
 					"scan_interval": "Aktualizační interval (minuty)"
 				}
 			}
-        }
-    }
+		}
+	},
+	"options": {
+		"step": {
+			"init": {
+				"title": "Pražská integrovaná doprava",
+				"description": "Zadejte zastávky, které chcete sledovat",
+				"data": {
+					"stop1": "Zastávka 1",
+					"stop2": "Zastávka 2",
+					"stop3": "Zastávka 3",
+					"stop4": "Zastávka 4",
+					"stop5": "Zastávka 5",
+					"stop6": "Zastávka 6",
+					"stop7": "Zastávka 7",
+					"stop8": "Zastávka 8",
+					"stop9": "Zastávka 9",
+					"stop10": "Zastávka 10"
+				}
+			}
+		},
+		"error": {
+			"unknown_stop_stop1": "Neznámá zastávka 1",
+			"unknown_stop_stop2": "Neznámá zastávka 2",
+			"unknown_stop_stop3": "Neznámá zastávka 3",
+			"unknown_stop_stop4": "Neznámá zastávka 4",
+			"unknown_stop_stop5": "Neznámá zastávka 5",
+			"unknown_stop_stop6": "Neznámá zastávka 6",
+			"unknown_stop_stop7": "Neznámá zastávka 7",
+			"unknown_stop_stop8": "Neznámá zastávka 8",
+			"unknown_stop_stop9": "Neznámá zastávka 9",
+			"unknown_stop_stop10": "Neznámá zastávka 10"
+		}
+	}
 }

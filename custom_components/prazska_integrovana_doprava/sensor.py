@@ -1,7 +1,6 @@
 import datetime
 import logging
 import json
-import logging
 import os
 
 from homeassistant.components.sensor import SensorEntity
@@ -36,11 +35,11 @@ async def async_setup_entry(
 class TimeTableSensor(SensorEntity):
     _data: list[PidConnection] = []
 
-    def __init__(self, connector: PidConnector, n: int):
+    def __init__(self, connector: PidConnector, n: int) -> None:
         self._connector = connector
         self._n = n
         self._has_data = False
-        _LOGGER.debug(f"component {n} created")
+        _LOGGER.debug("component %s created", n)
 
     device_class = DEVICE_CLASS_TIMESTAMP
 
