@@ -6,6 +6,7 @@ from typing import Any
 
 # from homeassistant.helpers.aiohttp_client import async_get_clientsession
 import voluptuous as vol
+from .pid_connector import PidConnector, PidException
 
 from homeassistant import config_entries
 from homeassistant.const import CONF_API_KEY, CONF_SCAN_INTERVAL
@@ -34,8 +35,25 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             return self.async_show_form(
                 step_id="user", data_schema=STEP_USER_DATA_SCHEMA
             )
-        return self.async_create_entry(
-            title="Pražská integrovaná doprava", data=user_input
+
+        # user entered the config, let's verify
+        errors = {}
+        try:
+            connector = PidConnector(user_input[CONF_API_KEY])
+            connector.get_stops()
+
+            _LOGGER.info("Initial request to Golemio API OK")
+
+            return self.async_create_entry(
+                title="Pražská integrovaná doprava", data=user_input
+            )
+        except PidException:
+            errors["base"] = "cannot_connect"
+        except Exception:  # pylint: disable=broad-except
+            _LOGGER.exception("Unexpected exception")
+            errors["base"] = "unknown"
+        return self.async_show_form(
+            step_id="user", data_schema=STEP_USER_DATA_SCHEMA, errors=errors
         )
 
 

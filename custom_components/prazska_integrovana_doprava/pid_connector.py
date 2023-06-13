@@ -2,11 +2,19 @@ import datetime
 import logging
 import dateutil.parser
 from datetime import date, datetime
-
+import aiohttp
+import asyncio
 
 import requests
 
 _LOGGER = logging.getLogger(__name__)
+
+
+class PidException(Exception):
+    "Raised when something fails"
+
+    def __init__(self, message) -> None:
+        self.message = message
 
 
 class PidConnection:
@@ -71,3 +79,20 @@ class PidConnector:
         self.__cache_date = datetime.now()
 
         return departures
+
+    def get_stops(self):
+        _LOGGER.debug("loading all PID stops")
+        response = requests.get(
+            "https://api.golemio.cz/v2/gtfs/stops", headers=self._apiheaders, timeout=20
+        )
+        if response.status_code >= 400:
+            _LOGGER.error("failed to get PID stops: %s", response._content)
+            raise PidException(response.reason)
+        data = response.json()
+        result = {}
+        for stop in data["features"]:
+            p = stop["properties"]
+            if not p["stop_name"] in result.keys():
+                result.update({p["stop_name"]: []})
+            result[p["stop_name"]].append(p["stop_id"])
+        return result

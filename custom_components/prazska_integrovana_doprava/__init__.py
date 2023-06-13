@@ -2,6 +2,9 @@
 
 
 from __future__ import annotations
+import json
+import logging
+import os
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import CONF_API_KEY
@@ -9,6 +12,9 @@ from homeassistant.core import HomeAssistant
 
 from .const import DOMAIN
 from .pid_connector import PidConnector
+
+_LOGGER = logging.getLogger(__name__)
+
 
 # List of platforms to support. There should be a matching .py file for each,
 # eg <cover.py> and <sensor.py>
@@ -20,7 +26,9 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
     # Store an instance of the "connecting" class that does the work of speaking
     # with your actual devices.
-    hass.data[DOMAIN][entry.entry_id] = PidConnector(entry.data[CONF_API_KEY])
+    connector = PidConnector(entry.data[CONF_API_KEY])
+
+    hass.data[DOMAIN][entry.entry_id] = connector
 
     # This creates each HA object for each platform your device requires.
     # It's done by calling the `async_setup_entry` function in each platform module.

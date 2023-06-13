@@ -1,5 +1,8 @@
 import datetime
 import logging
+import json
+import logging
+import os
 
 from homeassistant.components.sensor import SensorEntity
 from homeassistant.config_entries import ConfigEntry
@@ -66,6 +69,15 @@ class TimeTableSensor(SensorEntity):
         return self._has_data and len(self._data) > self._n
 
     def update(self) -> None:
+        stops_data_file_location = self.hass.config.path("pid_stops_list.json")
+        if not os.path.exists(stops_data_file_location):
+            _LOGGER.info("Downloading stops data file to %s", stops_data_file_location)
+            stops = self._connector.get_stops()
+            j = json.dumps(stops)
+            with open(stops_data_file_location, "wt", encoding="utf-8") as file:
+                file.write(j)
+            _LOGGER.debug("download ok")
+
         self._data = self._connector.get_timetable()
         self._has_data = True
 
