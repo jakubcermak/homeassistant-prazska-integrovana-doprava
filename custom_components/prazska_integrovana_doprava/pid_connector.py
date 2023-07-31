@@ -30,9 +30,11 @@ class PidConnection:
 
 
 class PidConnector:
-    apiurl = "https://api.golemio.cz/v2/pid/departureboards?ids=U2223Z2&ids=U2223Z1&ids=U2259Z1&ids=U2259Z2&minutesAfter=600&limit=5"
+    # example of API url: "https://api.golemio.cz/v2/pid/departureboards?ids=U2223Z2&ids=U2223Z1&ids=U2259Z1&ids=U2259Z2&minutesAfter=600&limit=5"
+    apiurl: str
     __cache: list[PidConnection]
     __cache_date: datetime
+    __configured_stops: list[str]
 
     def __init__(self, apikey) -> None:
         self._apikey = apikey
@@ -40,6 +42,8 @@ class PidConnector:
         self._bus_stops = {}
         self.__cache = None
         self.__cache_date = None
+        self.__configured_stops = []
+        self.apiurl = None
 
     def __read_departure(self, data) -> PidConnection:
         return PidConnection(
@@ -58,7 +62,24 @@ class PidConnector:
             and (datetime.now() - self.__cache_date).total_seconds() < 60
         )
 
+    def set_stops(self, stops: list[str]) -> None:
+        _LOGGER.info("Setting new bus stops: %s", stops)
+        if not stops:
+            return
+        self.__cache = None
+        self.__cache_date = None
+        self.__configured_stops = stops
+        self.apiurl = (
+            "https://api.golemio.cz/v2/pid/departureboards?minutesAfter=600&limit=5&"
+            + ("&".join([f"ids={ss}" for ss in stops]))
+        )
+        _LOGGER.debug("composed Golemio API url is %s", self.apiurl)
+
     def get_timetable(self) -> list[PidConnection]:
+        if not self.apiurl or len(self.__configured_stops) == 0:
+            _LOGGER.error("no bus stops configured")
+            return {}
+
         if self.__is_cache_valid():
             _LOGGER.debug("Reading data from cache")
             return self.__cache

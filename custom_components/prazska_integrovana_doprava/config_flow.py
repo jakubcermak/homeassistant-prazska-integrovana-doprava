@@ -88,6 +88,8 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
         return json_data
 
     def validate_stopname(self, name: str) -> bool:
+        if name == "-":
+            return True
         json_data = self.load_datafile()
         return name in json_data.keys()
 
@@ -121,7 +123,7 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
             if valid:
                 stopids = []
                 for cfg in CONF_STOP_ALL:
-                    if user_input[cfg]:
+                    if user_input[cfg] and user_input[cfg] != "-":
                         stopids.extend(self.get_stopid(user_input[cfg]))
                 _LOGGER.info("Configured to retrieve following stop IDs: %s", stopids)
                 d = dict(self.config_entry.data)

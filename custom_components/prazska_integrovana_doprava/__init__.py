@@ -27,13 +27,23 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     # Store an instance of the "connecting" class that does the work of speaking
     # with your actual devices.
     connector = PidConnector(entry.data[CONF_API_KEY])
+    connector.set_stops(entry.data["stop_ids"])
 
     hass.data[DOMAIN][entry.entry_id] = connector
 
     # This creates each HA object for each platform your device requires.
     # It's done by calling the `async_setup_entry` function in each platform module.
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
+
+    entry.async_on_unload(entry.add_update_listener(update_listener))
+
     return True
+
+
+async def update_listener(hass, entry):
+    """Handle options update."""
+    connector = hass.data[DOMAIN][entry.entry_id]
+    connector.set_stops(entry.data["stop_ids"])
 
 
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
