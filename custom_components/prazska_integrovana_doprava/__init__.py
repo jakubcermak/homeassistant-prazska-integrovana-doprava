@@ -27,7 +27,8 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     # Store an instance of the "connecting" class that does the work of speaking
     # with your actual devices.
     connector = PidConnector(entry.data[CONF_API_KEY])
-    connector.set_stops(entry.data["stop_ids"])
+    if "stop_ids" in entry.data.keys():
+        connector.set_stops(entry.data["stop_ids"])
 
     hass.data[DOMAIN][entry.entry_id] = connector
 

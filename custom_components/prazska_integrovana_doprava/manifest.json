@@ -1,12 +1,19 @@
 {
   "domain": "prazska_integrovana_doprava",
   "name": "Pražská Integrovaná Doprava",
-  "codeowners": ["@jakubcermak"],
+  "codeowners": [
+    "@jakubcermak"
+  ],
   "config_flow": true,
-  "documentation": "https://github.com/jakubcermak/homeassistant-prazska-integrovana-doprava",
+  "documentation": "https://www.jcermak.cz",
   "integration_type": "service",
   "iot_class": "cloud_polling",
-  "loggers": ["prazska_integrovana_doprava"],
-  "requirements": ["requests"],
+  "loggers": [
+    "prazska_integrovana_doprava"
+  ],
+  "requirements": [
+    "requests",
+    "aiohttp"
+  ],
   "version": "1.0.0"
 }

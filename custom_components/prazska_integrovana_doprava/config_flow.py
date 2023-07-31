@@ -43,7 +43,7 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         errors = {}
         try:
             connector = PidConnector(user_input[CONF_API_KEY])
-            connector.get_stops()
+            await connector.async_get_stops()
 
             _LOGGER.info("Initial request to Golemio API OK")
 
@@ -104,7 +104,12 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
 
         OPTIONS_DATA_SCHEMA = vol.Schema(
             {
-                vol.Optional(i, default=self.config_entry.options[i]): str
+                vol.Optional(
+                    i,
+                    default=self.config_entry.options[i]
+                    if i in self.config_entry.options.keys()
+                    else "",
+                ): str
                 for i in CONF_STOP_ALL
             }
         )
