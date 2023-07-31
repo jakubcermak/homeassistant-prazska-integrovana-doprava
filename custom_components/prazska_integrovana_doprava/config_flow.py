@@ -43,7 +43,10 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         errors = {}
         try:
             connector = PidConnector(user_input[CONF_API_KEY])
-            await connector.async_get_stops()
+            stopsfile = await connector.async_get_stops()
+            stops_data_file_location = self.hass.config.path("pid_stops_list.json")
+            with open(stops_data_file_location, "w", encoding="utf-8") as file:
+                json.dump(stopsfile, file)
 
             _LOGGER.info("Initial request to Golemio API OK")
 
