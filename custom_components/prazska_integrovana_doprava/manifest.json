@@ -3,7 +3,7 @@
   "name": "Pražská Integrovaná Doprava",
   "codeowners": ["@jakubcermak"],
   "config_flow": true,
-  "documentation": "https://www.jcermak.cz",
+  "documentation": "https://github.com/jakubcermak/homeassistant-prazska-integrovana-doprava",
   "integration_type": "service",
   "iot_class": "cloud_polling",
   "loggers": ["prazska_integrovana_doprava"],
