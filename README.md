@@ -96,3 +96,49 @@ entities:
 title: PID Odjezdy
 
 ```
+## Příklad nastavení Lovelace s vlastní grafikou
+Další příklad nastavení karty Markdown, která  zobrazí a naformátuje všech 5 odjezdů, zbývající čas, linku a směr.
+![](img/markdown.png)
+```
+type: markdown
+content: >
+  {% macro set_color(diff) %}
+  {%- if diff > 360 -%}
+  {{ '<font color=limegreen>' }}
+  {%- elif diff > 180 -%}
+  {{ '<font color=orange>' }}
+  {%- elif diff > 0 -%}
+  {{ '<font color=red>' }}
+  {%- else -%}
+  {{ '<font color=darkcyan>' }}
+  {%- endif -%}
+  {% endmacro %}
+
+  {%- set c2 = "</font>" -%}
+  ---
+  {% for PIDodjezd in
+  expand('sensor.pid_odjezd_1','sensor.pid_odjezd_2','sensor.pid_odjezd_3','sensor.pid_odjezd_4','sensor.pid_odjezd_5') | reverse | list %}
+
+  {% set dt = PIDodjezd.state | as_datetime %}
+  {% set diff = (dt - now()).total_seconds() %}
+  {% set hod = diff | timestamp_custom('%H', false) | int %}
+  {% set min = diff | timestamp_custom('%M', false) | int %}
+  {% set c1 = set_color(diff) %}
+  {% set lo = '' if hod > 0 else '<' %}
+
+  {% if diff < 0 %}
+  # Už asi {{c1}}odjel{{c2}}
+  {% else %}
+  # Za {% if hod > 0 %} {{c1}} {% if 2 > hod %} {{hod}}{{c2}} hodinu {% elif 5 >  hod > 1 %} {{hod}}{{c2}} hodiny{% else %} {{hod}}{{c2}} hodin{% endif %} {% endif %} {{c1}}{% if min < 1 and hod < 1  %} {{lo}} 1 {{c2}}minutu{% elif 2 > min > 0 %} {{min}}{{c2}} minutu {% elif 5 > min > 1 %} {{min}}{{c2}} minuty{% else %} {{min}}{{c2}} minut{% endif %}</font> {% endif %}
+
+  ## {{ as_timestamp(state_attr(PIDodjezd.entity_id, 'predicted')) |
+  timestamp_custom('%H:%M') }} - linka {{ state_attr(PIDodjezd.entity_id,
+  'linenumber') }}
+
+  ### Směr {{ state_attr(PIDodjezd.entity_id, 'stop_to') }}
+
+  ---
+  {% endfor %}
+title: PID Odjezdy
+
+```
