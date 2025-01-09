@@ -4,8 +4,8 @@ import json
 import os
 
 from homeassistant.components.sensor import SensorEntity
+from homeassistant.components.sensor import SensorDeviceClass
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import DEVICE_CLASS_TIMESTAMP
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
@@ -41,8 +41,7 @@ class TimeTableSensor(SensorEntity):
         self._has_data = False
         _LOGGER.debug("component %s created", n)
 
-    device_class = DEVICE_CLASS_TIMESTAMP
-
+    device_class = SensorDeviceClass.TIMESTAMP
     @property
     def unique_id(self) -> str | None:
         return f"pid_departure_{self._n+1}"
