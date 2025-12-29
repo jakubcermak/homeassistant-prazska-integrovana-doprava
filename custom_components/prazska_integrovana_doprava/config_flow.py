@@ -82,7 +82,7 @@ class NotSupported(HomeAssistantError):
 class OptionsFlowHandler(config_entries.OptionsFlow):
     def __init__(self, config_entry: config_entries.ConfigEntry) -> None:
         """Initialize options flow."""
-        self.config_entry = config_entry
+        self._config_entry = config_entry
 
     def load_datafile(self):
         stops_data_file_location = self.hass.config.path("pid_stops_list.json")
@@ -109,8 +109,8 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
             {
                 vol.Optional(
                     i,
-                    default=self.config_entry.options[i]
-                    if i in self.config_entry.options.keys()
+                    default=self._config_entry.options[i]
+                    if i in self._config_entry.options.keys()
                     else "",
                 ): str
                 for i in CONF_STOP_ALL
@@ -134,9 +134,9 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
                     if user_input[cfg] and user_input[cfg] != "-":
                         stopids.extend(self.get_stopid(user_input[cfg]))
                 _LOGGER.info("Configured to retrieve following stop IDs: %s", stopids)
-                d = dict(self.config_entry.data)
+                d = dict(self._config_entry.data)
                 d.update({"stop_ids": stopids})
-                self.hass.config_entries.async_update_entry(self.config_entry, data=d)
+                self.hass.config_entries.async_update_entry(self._config_entry, data=d)
                 return self.async_create_entry(title="", data=user_input)
             else:
                 return self.async_show_form(
